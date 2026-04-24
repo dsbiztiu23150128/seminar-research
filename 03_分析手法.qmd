@@ -1,0 +1,187 @@
+---
+title: "分析手法"
+---
+
+:::{.callout-tip title="書き方ガイド：分析手法"}
+**何を書くか：** 使用する分析手法の理論的背景と、なぜその手法を選んだかの根拠を述べる章です。
+
+**書き方のコツ：**
+
+- **手法の選定理由** を比較表で示すと説得力が増します
+- **数学的な定義** は LaTeX 数式で正確に記述します
+- パイプライン全体を図解すると読者の理解が深まります
+- 評価指標は定義を明示し、なぜその指標を使うのかを説明します
+
+**Quartoの機能：**
+
+- LaTeX 数式は `$$` で囲みます。`{#eq-label}` で式番号を付与し、`@eq-label` で参照します
+- Mermaid 記法でパイプライン図やフロー図を描けます
+- `#| label: tbl-xxx` と `#| tbl-cap:` で表番号とキャプションを自動付与します
+:::
+
+
+## 手法の選定
+
+本研究では、以下の2手法を比較する。ベースラインとして線形回帰を用い、非線形な関係を捉える手法として回帰木（rpart）[@James2023] を採用する。
+
+| 手法 | 特徴 | 利点 | 欠点 |
+|------|------|------|------|
+| 線形回帰 | 線形モデル | 解釈が容易、計算が高速 | 非線形関係を捉えにくい |
+| 回帰木（rpart） | 決定木ベースの再帰分割 | 非線形対応、解釈が視覚的 | 過学習リスク、不安定性 |
+
+: 手法の比較 {#tbl-method-comparison}
+
+
+## 線形回帰（ベースライン）
+
+線形回帰モデルは、目的変数 $y$ を説明変数 $\mathbf{x} = (x_1, x_2, \ldots, x_p)$ の線形結合で表現する。
+
+$$
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+$$ {#eq-linear}
+
+ここで $\beta_0$ は切片、$\beta_1, \ldots, \beta_p$ は回帰係数、$\varepsilon$ は誤差項である [@James2023]。
+
+
+## 回帰木（rpart）
+
+回帰木は、説明変数の空間を再帰的に分割し、各領域ごとに目的変数の平均値を予測するノンパラメトリック手法である [@James2023]。R の `rpart` パッケージはR に標準搭載されており、追加インストール不要で利用できる。
+
+### 分割の基準
+
+各ノードにおいて、残差二乗和（RSS）を最小化する分割点を探索する。
+
+$$
+\text{RSS} = \sum_{x_i \in R_1} (y_i - \hat{y}_{R_1})^2 + \sum_{x_i \in R_2} (y_i - \hat{y}_{R_2})^2
+$$ {#eq-rss-split}
+
+ここで $R_1, R_2$ は分割後の2つの領域、$\hat{y}_{R_k}$ は各領域内の目的変数の平均値である。
+
+### 決定木の構造
+
+```{mermaid}
+%%| label: fig-decision-tree
+%%| fig-cap: "決定木による分岐のイメージ"
+flowchart TD
+    A["気温 ≥ 20°C ?"] -->|Yes| B["時間帯 ∈ 通勤時間 ?"]
+    A -->|No| C["降雨あり ?"]
+    B -->|Yes| D["予測: 150台"]
+    B -->|No| E["予測: 90台"]
+    C -->|Yes| F["予測: 25台"]
+    C -->|No| G["予測: 55台"]
+```
+
+### 剪定（Pruning）
+
+回帰木は深くなるほど訓練データに過学習する。これを防ぐため、コスト複雑度剪定（cost-complexity pruning）を行う。
+
+$$
+\text{Cost} = \text{RSS} + \alpha \cdot |T|
+$$ {#eq-cost-complexity}
+
+ここで $|T|$ は木の終端ノード数、$\alpha$ は複雑度パラメータ（`cp`）である。$\alpha$ が大きいほど単純な木が選ばれる。
+
+
+## 説明変数の設計
+
+| 変数名 | 型 | 説明 | 変換 |
+|--------|------|------|------|
+| `hour` | integer | 時間帯 | そのまま使用 |
+| `temperature` | numeric | 気温 | そのまま使用 |
+| `humidity` | numeric | 湿度 | そのまま使用 |
+| `wind_speed` | numeric | 風速 | そのまま使用 |
+| `is_rain` | integer | 降雨フラグ | factor 変換 |
+| `is_weekend` | logical | 休日フラグ | factor 変換 |
+| `month` | integer | 月 | factor 変換 |
+
+: 説明変数一覧 {#tbl-features}
+
+
+## 分析パイプライン
+
+```{mermaid}
+%%| label: fig-pipeline
+%%| fig-cap: "分析パイプライン"
+flowchart LR
+    A[データ読込] --> B[前処理<br>factor変換]
+    B --> C[訓練/テスト分割<br>80:20]
+    C --> D[モデル学習]
+    D --> E1[線形回帰<br>lm]
+    D --> E2[回帰木<br>rpart]
+    E1 --> F[精度評価<br>MAE/RMSE/R²]
+    E2 --> F
+    F --> G[変数重要度<br>分析]
+```
+
+
+## 精度評価指標
+
+モデルの予測精度を評価するため、以下の3指標を使用する。
+
+### 平均絶対誤差（MAE）
+
+$$
+\text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
+$$ {#eq-mae}
+
+### 二乗平均平方根誤差（RMSE）
+
+$$
+\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+$$ {#eq-rmse}
+
+### 決定係数（R²）
+
+$$
+R^2 = 1 - \frac{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2}
+$$ {#eq-r2}
+
+ここで $y_i$ は実測値、$\hat{y}_i$ は予測値、$\bar{y}$ は実測値の平均、$n$ はサンプル数である。
+
+@eq-mae は外れ値に頑健な指標、@eq-rmse は大きな誤差をより重く評価する指標、@eq-r2 はモデルの説明力を0〜1で表す指標である。
+
+
+## 追加パッケージの利用（発展）
+
+本テンプレートはR の基本パッケージのみで動作するが、研究の目的に応じてより高度なパッケージを導入できる。
+
+::: {.callout-important title="パッケージの追加手順"}
+1. **R コンソール**で `install.packages("パッケージ名")` を実行（初回のみ）
+2. `.qmd` ファイルのコードブロック内で `library(パッケージ名)` を記述
+3. `quarto render` で正常にビルドできることを確認
+:::
+
+### 代表的な追加パッケージ
+
+| パッケージ | 用途 | インストール |
+|:---|:---|:---|
+| `tidyverse` | データ操作・可視化の統合環境 | `install.packages("tidyverse")` |
+| `randomForest` | ランダムフォレスト | `install.packages("randomForest")` |
+| `lightgbm` | 勾配ブースティング（LightGBM） | `install.packages("lightgbm")` |
+| `plotly` | インタラクティブなグラフ | `install.packages("plotly")` |
+
+### 使用例：LightGBM で回帰木を置き換える場合
+
+```r
+# 1. インストール（R コンソールで一度だけ実行）
+install.packages("lightgbm")
+
+# 2. .qmd ファイル内で読み込んで使用
+library(lightgbm)
+
+dtrain <- lgb.Dataset(
+  data  = as.matrix(train_data[, -which(names(train_data) == "count")]),
+  label = train_data$count
+)
+
+params <- list(objective = "regression", metric = "rmse",
+               num_leaves = 31, learning_rate = 0.1)
+
+lgbm_fit <- lgb.train(params, dtrain, nrounds = 500)
+```
+
+::: {.callout-warning title="注意"}
+- 追加パッケージを使う場合、`quarto render` 時にそのパッケージがインストール済みである必要がある
+- エラーが出たら、まず `install.packages("パッケージ名")` を実行してから再度 `quarto render` する
+- GitHub Pages にデプロイする際、**ビルドは自分の PC 上で行われる**ため、自分の PC にパッケージがあれば問題ない
+:::

@@ -1,0 +1,360 @@
+---
+title: "東京都内シェアサイクル利用数の<br>予測モデル構築に関する研究"
+subtitle: "専門演習 テーマ研究"
+author: "東国 花子"
+date: today
+date-format: "YYYY年MM月DD日"
+institute: "東京国際大学 商学部 データサイエンスコース"
+format:
+  revealjs:
+    theme: [default, css/custom.scss]
+    logo: css/icon/tiu.png
+    slide-number: true
+    show-slide-number: all
+    width: 1280
+    height: 720
+    transition: slide
+    lang: ja
+    code-fold: true
+    code-line-numbers: false
+    fig-align: center
+    smaller: true
+    mermaid:
+      theme: default
+    footer: "Hanako Tokoku @ Tokyo Int'l Univ."
+bibliography: ref/references.bib
+execute:
+  echo: false
+  warning: false
+  message: false
+  cache: false
+---
+
+
+## 目次
+
+1. 研究の背景
+2. 研究の目的
+3. データの概要
+4. 利用数の時系列
+5. 気温と利用数の関係
+6. 曜日・時間帯パターン
+7. 分析手法の概要
+8. 回帰木の仕組み
+9. 分析パイプライン
+10. 精度比較
+11. 予測結果の可視化
+12. 変数重要度
+13. 考察
+14. まとめと今後の課題
+15. 参考文献
+
+::: {.notes}
+発表は約15分を想定しています。各スライドの説明は1分程度を目安にしてください。
+:::
+
+
+## 研究の背景
+
+:::{.incremental}
+- 都市部でシェアサイクルの利用が急速に拡大している
+- 環境負荷の低い移動手段として注目 [@Fishman2016]
+- 効率的な運営には**利用数の予測**が不可欠
+- 気象条件・曜日・時間帯が利用パターンに影響 [@Eren2020]
+- 東京都内に特化した予測モデルの構築事例は限られている
+:::
+
+::: {.notes}
+背景では、なぜこの研究テーマを選んだかを説明します。社会的な意義と学術的なギャップの両面から動機を述べましょう。
+:::
+
+
+## 研究の目的
+
+以下の3点を明らかにする
+
+. . .
+
+1. シェアサイクル利用数を**予測するモデル**を構築する
+
+. . .
+
+2. **線形回帰と回帰木**の精度を比較する
+
+. . .
+
+3. 利用数に影響を与える**要因を特定**する
+
+
+## データの概要
+
+| 項目 | 内容 |
+|------|------|
+| 対象期間 | 2024年1月〜12月（365日間） |
+| 時間粒度 | 1時間単位 |
+| レコード数 | 8,760件 |
+| 目的変数 | 1時間あたりの利用数 |
+| 説明変数 | 気温、湿度、風速、降雨、曜日、時間帯 |
+
+::: {.notes}
+合成データを使用していることを補足説明しましょう。実際の研究では、データの出典と取得方法を詳しく説明します。
+:::
+
+
+## データの出典
+
+| 項目 | 内容 |
+|------|------|
+| 利用データ | 東京都シェアサイクル事業オープンデータ（※実際の出典に置き換えてください） |
+| 気象データ | 気象庁 過去の気象データ検索（※実際の出典に置き換えてください） |
+| 取得日 | 2025年○月○日 |
+| 前処理 | `src/generate_data.R` で実行 |
+
+::: {.notes}
+データの出典は具体的に記載しましょう。URL、取得日、ライセンス情報なども明記すると信頼性が高まります。
+:::
+
+```{r}
+#| label: slide-data-load
+
+bike_data <- read.csv("data/bike_data.csv")
+bike_data$date <- as.Date(bike_data$date)
+bike_data$wday <- factor(bike_data$wday,
+  levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+```
+
+
+## 利用数の時系列
+
+```{r}
+#| label: slide-timeseries
+
+daily_avg <- aggregate(count ~ date, data = bike_data, FUN = mean)
+
+plot(daily_avg$date, daily_avg$count, type = "l", col = "#2F5496", lwd = 1.5,
+     xlab = "日付", ylab = "平均利用数（台/時間）",
+     cex.lab = 1.3, cex.axis = 1.1)
+```
+
+
+## 気温と利用数
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| label: slide-temp-scatter
+
+set.seed(42)
+idx <- sample(nrow(bike_data), 1500)
+sample_data <- bike_data[idx, ]
+
+plot(sample_data$temperature, sample_data$count,
+     pch = 16, col = adjustcolor("#2F5496", 0.3), cex = 0.5,
+     xlab = "気温（°C）", ylab = "利用数（台）",
+     cex.lab = 1.3, cex.axis = 1.1)
+```
+:::
+
+::: {.column width="50%"}
+**気温と利用数の関係**
+
+- 気温が高いほど利用数が増加
+- 約20°C以上で利用数が安定
+- 低温時は利用が大幅に減少
+- 正の相関が認められる
+:::
+
+::::
+
+
+## 曜日・時間帯パターン
+
+```{r}
+#| label: slide-hourly
+
+hourly_avg_wd <- aggregate(count ~ hour,
+  data = bike_data[!bike_data$is_weekend, ], FUN = mean)
+hourly_avg_we <- aggregate(count ~ hour,
+  data = bike_data[bike_data$is_weekend == TRUE, ], FUN = mean)
+
+barplot(rbind(hourly_avg_wd$count, hourly_avg_we$count),
+        beside = TRUE, names.arg = 0:23,
+        col = c("#2F5496", "#C55A11"),
+        xlab = "時間帯", ylab = "平均利用数（台）",
+        cex.lab = 1.3, cex.axis = 1.1, cex.names = 0.9)
+legend("topleft", legend = c("平日", "休日"),
+       fill = c("#2F5496", "#C55A11"), cex = 1.1)
+```
+
+
+## 分析手法の概要
+
+| 手法 | 特徴 | 利点 | 欠点 |
+|------|------|------|------|
+| 線形回帰 | 線形モデル | 解釈が容易 | 非線形に弱い |
+| 回帰木 | 決定木ベースの再帰分割 | 非線形対応 | 過学習リスク |
+
+- ベースライン：**線形回帰** [@James2023]
+- 非線形手法：**回帰木（rpart）** [@James2023]
+- 評価指標：MAE / RMSE / R²
+
+
+## 回帰木の仕組み
+
+| ステップ | 処理内容 |
+|:---:|:---|
+| 1 | 全データを1つのノードに配置 |
+| 2 | 残差二乗和（RSS）を最小化する分割点を探索 |
+| 3 | データを2つの領域に分割 |
+| 4 | 各領域で再帰的に分割を繰り返す |
+| 5 | 停止条件（最大深さ等）で分割を終了 |
+| 6 | コスト複雑度剪定で過学習を防止 |
+| 最終 | **各終端ノードの平均値** で予測 |
+
+: 回帰木の構築手順
+
+
+## 分析パイプライン
+
+| 順序 | 工程 | 詳細 |
+|:---:|:---|:---|
+| 1 | データ読込 | 合成データ（365日×24時間） |
+| 2 | 前処理 | factor変換・特徴量作成 |
+| 3 | 分割 | 訓練 80% / テスト 20% |
+| 4a | 線形回帰 | ベースラインモデル（`lm`） |
+| 4b | 回帰木 | 非線形モデル（`rpart`） |
+| 5 | 精度比較 | MAE / RMSE / R² |
+| 6 | 変数重要度 | rpart の重要度スコア |
+
+
+## 精度比較
+
+```{r}
+#| label: slide-model-fit
+
+# --- モデリング用データ ---
+model_data <- bike_data[, !names(bike_data) %in% c("date", "wday")]
+model_data$month      <- factor(model_data$month)
+model_data$is_rain    <- factor(model_data$is_rain)
+model_data$is_weekend <- factor(model_data$is_weekend)
+
+set.seed(123)
+n <- nrow(model_data)
+train_idx  <- sample(n, floor(0.8 * n))
+train_data <- model_data[train_idx, ]
+test_data  <- model_data[-train_idx, ]
+
+lm_fit    <- lm(count ~ ., data = train_data)
+lm_pred   <- predict(lm_fit, newdata = test_data)
+
+library(rpart)
+tree_fit  <- rpart(count ~ ., data = train_data,
+                   control = rpart.control(maxdepth = 8, minsplit = 20))
+tree_pred <- predict(tree_fit, newdata = test_data)
+
+actual <- test_data$count
+
+calc_mae  <- function(a, p) round(mean(abs(a - p)), 2)
+calc_rmse <- function(a, p) round(sqrt(mean((a - p)^2)), 2)
+calc_rsq  <- function(a, p) round(1 - sum((a - p)^2) / sum((a - mean(a))^2), 2)
+```
+
+```{r}
+#| label: slide-accuracy-table
+
+accuracy_table <- data.frame(
+  モデル = c("線形回帰", "回帰木（rpart）"),
+  MAE  = c(calc_mae(actual, lm_pred),  calc_mae(actual, tree_pred)),
+  RMSE = c(calc_rmse(actual, lm_pred), calc_rmse(actual, tree_pred)),
+  R2   = c(calc_rsq(actual, lm_pred),  calc_rsq(actual, tree_pred))
+)
+names(accuracy_table)[4] <- "R\u00b2"
+
+knitr::kable(accuracy_table)
+```
+
+**回帰木が全指標で線形回帰を上回る**
+
+
+## 予測結果の可視化
+
+```{r}
+#| label: slide-pred-plot
+
+n_plot <- 150
+idx <- seq_len(n_plot)
+
+plot(idx, actual[idx], type = "l", col = "black", lwd = 1.5,
+     xlab = "テストデータ インデックス", ylab = "利用数（台）",
+     ylim = range(c(actual[idx], lm_pred[idx], tree_pred[idx])),
+     cex.lab = 1.3, cex.axis = 1.1)
+lines(idx, tree_pred[idx], col = "#2F5496", lwd = 1.5, lty = 3)
+lines(idx, lm_pred[idx],  col = "#C55A11", lwd = 1.5, lty = 2)
+legend("topright",
+       legend = c("実測値", "回帰木", "線形回帰"),
+       col = c("black", "#2F5496", "#C55A11"),
+       lty = c(1, 3, 2), lwd = 1.5, cex = 1.1)
+```
+
+
+## 変数重要度
+
+```{r}
+#| label: slide-importance
+
+imp <- tree_fit$variable.importance
+imp <- sort(imp)
+
+par(mar = c(5, 8, 2, 2))
+barplot(imp, horiz = TRUE, las = 1, col = "#2F5496",
+        xlab = "重要度", cex.lab = 1.3, cex.axis = 1.1, cex.names = 1.1)
+```
+
+
+## 考察
+
+:::{.incremental}
+- **回帰木** は線形回帰より全指標で高精度
+  - 非線形な利用パターンの捕捉に有効
+- **時間帯**が最も重要な予測変数
+  - 通勤・通学の移動パターンを反映
+- **気温**が2番目に重要
+  - 先行研究 [@Eren2020] の知見と一致
+- **降雨**は利用数を大幅に減少させる
+  - 需要予測で重要なファクター
+:::
+
+
+## まとめと今後の課題
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**研究成果**
+
+- 回帰木による利用数予測モデルを構築
+- 線形回帰比で全精度指標が改善
+- 時間帯・気温が最重要変数
+:::
+
+::: {.column width="50%"}
+**今後の課題**
+
+- 実データでの検証
+- ステーション別予測
+- ランダムフォレスト等との比較
+- リアルタイム予測への拡張
+:::
+
+::::
+
+::: {.notes}
+まとめでは研究の主要な成果を簡潔に振り返り、今後の研究の方向性を示します。質疑応答に備えて、限界点についても把握しておきましょう。
+:::
+
+
+## 参考文献
+
+::: {#refs}
+:::

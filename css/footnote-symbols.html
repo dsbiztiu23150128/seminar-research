@@ -1,0 +1,37 @@
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var symbols = ['*', '\u2020', '\u2021', '\u00A7'];
+
+  document.querySelectorAll('.reveal .slides section').forEach(function(section) {
+    var aside = section.querySelector('aside');
+    if (!aside) return;
+
+    var ol = aside.querySelector('ol.aside-footnotes');
+    if (!ol) return;
+
+    // Replace inline sup numbers with symbols
+    var supCount = 0;
+    Array.from(section.children).forEach(function(child) {
+      if (child === aside || child.classList.contains('notes')) return;
+      child.querySelectorAll('sup').forEach(function(sup) {
+        if (/^\d+$/.test(sup.textContent.trim())) {
+          sup.textContent = symbols[supCount % symbols.length];
+          supCount++;
+        }
+      });
+    });
+
+    // Replace list markers with symbols
+    ol.style.listStyle = 'none';
+    ol.style.paddingLeft = '1.5em';
+    var items = ol.querySelectorAll(':scope > li');
+    items.forEach(function(li, i) {
+      var sym = symbols[i % symbols.length];
+      var marker = document.createElement('sup');
+      marker.textContent = sym;
+      marker.style.marginRight = '0.3em';
+      li.insertBefore(marker, li.firstChild);
+    });
+  });
+});
+</script>

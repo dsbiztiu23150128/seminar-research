@@ -1,0 +1,483 @@
+/*-- scss:defaults --*/
+$font-family-sans-serif: "UD Digi Kyokasho NK-R", "UD Digi Kyokasho NK", "UD デジタル 教科書体 NK-R", "UD デジタル 教科書体 NK", "BIZ UDPGothic", "Noto Sans JP", sans-serif;
+$presentation-heading-font: "UD Digi Kyokasho NK-B", "UD Digi Kyokasho NK", "UD デジタル 教科書体 NK-B", "UD デジタル 教科書体 NK", "BIZ UDPGothic", "Noto Sans JP", sans-serif;
+$presentation-heading-color: #2c3e50;
+$body-color: #333;
+$link-color: #3498db;
+$code-block-bg: #f8f9fa;
+$presentation-font-size-root: 28px;
+
+/*-- scss:rules --*/
+
+@supports not (font-family: "BIZ UDPGothic") {
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+}
+
+/* ===== 全体の行間・余白 ===== */
+.reveal .slides section {
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.reveal p {
+  margin-bottom: 0.5em;
+  font-size: 1.1em;
+}
+
+/* ===== h2上余白を統一 ===== */
+html:not(.print-pdf) .reveal .slides section.slide {
+  padding-top: 10px !important;
+}
+
+/* ===== スクロール禁止（.scrollable指定スライドは除外） ===== */
+.reveal .slides section:not(.scrollable) {
+  overflow: hidden;
+}
+
+/* ===== 見出し ===== */
+.reveal section h1,
+.reveal .title-slide h1,
+.reveal .slides section h1 {
+  font-size: 1.4em !important;
+  margin-top: 0;
+  margin-bottom: 0.4em;
+}
+.reveal section h2 {
+  border-bottom: 3px solid #3498db;
+  padding-top: 0;
+  padding-bottom: 0.2em;
+  margin-top: 0;
+  margin-bottom: 0.4em;
+  font-size: 1.3em;
+}
+
+.reveal section h3 {
+  font-size: 1.1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.4em;
+}
+
+/* ===== リスト ===== */
+.reveal ul, .reveal ol {
+  font-size: 1.0em;
+  padding-left: 1.5em;
+}
+
+.reveal li {
+  margin-bottom: 0.4em;
+  line-height: 1.6;
+}
+
+.reveal li > p {
+  font-size: 1em;
+}
+
+.reveal li > ul,
+.reveal li > ol {
+  font-size: 1em;
+  margin-top: 0.2em;
+}
+
+/* ===== columns ===== */
+.reveal .columns {
+  font-size: 0.95em;
+  gap: 1.5em;
+}
+
+/* ===== callout ===== */
+.reveal .callout {
+  font-size: 1.0em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding: 0.6em 0.8em;
+}
+
+.reveal .callout .callout-title p {
+  font-size: 1.6em !important;
+}
+
+.reveal .callout .callout-content p {
+  font-size: 1.4em !important;
+}
+
+/* ===== テーブル（遠方でも読めるサイズ） ===== */
+.reveal table {
+  font-size: 0.88em;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+.reveal table th,
+.reveal table td {
+  padding: 0.5em 0.7em;
+}
+
+.reveal .smaller table {
+  font-size: 0.78em;
+}
+
+/* ===== コード ===== */
+.reveal code {
+  font-size: 0.72em;
+  font-family: "Consolas", "Source Code Pro", monospace;
+}
+
+.reveal pre code {
+  font-size: 1.4em !important;
+}
+
+.reveal .smaller pre code,
+.reveal section.smaller pre code {
+  font-size: 1.15em !important;
+}
+
+/* ===== blockquote ===== */
+.reveal blockquote {
+  margin: 0.6em 0;
+  padding: 0.5em 1em;
+  font-size: 0.75em;
+  line-height: 1.5;
+}
+
+/* ===== フッター・ページ番号 ===== */
+.reveal .footer {
+  font-size: 0.45em;
+  bottom: 0.5em !important;
+  z-index: 10;
+}
+
+.reveal .slide-number {
+  font-size: 0.7em;
+  bottom: 1em !important;
+  right: 1em !important;
+  background-color: rgba(0, 0, 0, 0.08);
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.center h2 {
+  text-align: center;
+}
+
+/* ===== タイトルページ ===== */
+#title-slide h1.title {
+  font-size: 2.0em !important;
+}
+
+#title-slide .subtitle {
+  font-size: 1.0em;
+}
+
+#title-slide .quarto-title-author {
+  display: flex;
+  flex-direction: column;
+
+  .quarto-title-affiliation {
+    order: 1;
+    margin-bottom: 0.2em;
+  }
+  .quarto-title-author-name {
+    order: 2;
+  }
+}
+
+/* ===== 脚注番号を角括弧表記に変更（指数表記との混同を防止） ===== */
+.reveal .slides section sup {
+  font-size: 0.35em;
+  color: #2874a6;
+}
+.reveal .slides section sup::before {
+  content: "[";
+}
+.reveal .slides section sup::after {
+  content: "]";
+}
+
+/* ===== 脚注をスライド下部に固定 ===== */
+.reveal section:has(.aside-footnotes) > :not(aside):not(.notes) {
+  padding-bottom: 0;
+}
+
+.reveal section:has(.aside-footnotes) {
+  padding-bottom: 1.2em !important;
+}
+
+.reveal aside:has(.aside-footnotes) {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 0.5em;
+  color: #2874a6;
+  border-top: 1px solid #b5d4e8;
+  padding-top: 0.3em;
+  padding-left: 3em;
+  margin: 0;
+  background: white;
+  z-index: 5;
+}
+
+.reveal .aside-footnotes {
+  margin: 0;
+  padding-left: 1.5em;
+}
+
+/* ===== HTML Flowchart ===== */
+.reveal .flow-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5em 0;
+}
+
+.reveal .flow-col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.reveal .flow-node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-size: 28px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #fff;
+  background: #6c757d;
+}
+
+.reveal .flow-node.sm {
+  font-size: 22px;
+  padding: 10px 16px;
+}
+
+.reveal .flow-node.xs {
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+.reveal .flow-arrow.xs {
+  font-size: 24px;
+  padding: 0 6px;
+}
+
+.reveal .flow-arrow {
+  font-size: 36px;
+  color: #999;
+  padding: 0 12px;
+  line-height: 1;
+}
+
+.reveal .flow-blue { background: #3498db; }
+.reveal .flow-green { background: #2ecc71; }
+.reveal .flow-red { background: #e74c3c; }
+.reveal .flow-gray { background: #95a5a6; }
+.reveal .flow-yellow { background: #f59e0b; }
+
+/* ===== Mermaidフォント統一 ===== */
+.reveal {
+  --mermaid-font-family: "BIZ UDPGothic", "Noto Sans JP", sans-serif;
+}
+
+.reveal .mermaid foreignObject p,
+.reveal .mermaid foreignObject div {
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* ===== SVG画像のレスポンシブ対応 ===== */
+.reveal section img[src$=".svg"] {
+  max-height: 280px;
+  width: auto;
+}
+
+/* ===== 番号付きボックス ===== */
+.box-inv {
+  display: inline-block;
+  width: 1.6em;
+  height: 1.6em;
+  line-height: 1.6em;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3498db;
+  border-radius: 4px;
+  margin-right: 0.3em;
+  font-size: 0.9em;
+  vertical-align: middle;
+}
+
+/* ===== 画像の中央揃え ===== */
+.reveal section p:has(> img),
+.reveal section p:has(> a > img) {
+  text-align: center;
+}
+
+/* ===== 画像・図・テーブルのスライドはみ出し防止 ===== */
+
+.reveal section img {
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.reveal section:not(:has(h2)):not(:has(h3)):not(#title-slide) img {
+  max-height: 620px;
+}
+
+.reveal section.img-slide img {
+  max-height: 620px;
+}
+
+.reveal .cell-output-display img,
+.reveal .cell-output-display svg {
+  max-height: 480px;
+  object-fit: contain;
+}
+
+.reveal .mermaid svg {
+  max-height: 500px;
+  max-width: 100%;
+}
+
+.reveal figure {
+  overflow: hidden;
+}
+
+.reveal table {
+  max-width: 100%;
+}
+
+.reveal section:has(table) {
+  overflow: auto;
+}
+
+.reveal pre {
+  max-height: 450px;
+  overflow: auto;
+}
+
+/* ===== .smaller スライド用の縮小ルール ===== */
+
+.reveal .smaller .pagedtable-wrapper,
+.reveal .smaller .pagedtable {
+  font-size: 0.72em;
+}
+.reveal .smaller .pagedtable td,
+.reveal .smaller .pagedtable th {
+  padding: 0.25em 0.5em;
+}
+
+.reveal .smaller .cell-output pre {
+  font-size: 0.78em;
+  line-height: 1.2;
+}
+
+.reveal .smaller table.dataframe {
+  font-size: 0.62em;
+  line-height: 1.15;
+}
+.reveal .smaller table.dataframe th,
+.reveal .smaller table.dataframe td {
+  padding: 0.15em 0.45em;
+}
+
+.reveal .smaller .cell-output-display small {
+  font-size: 0.7em;
+}
+
+.reveal .smaller .column .cell-output {
+  margin-top: 0.2em;
+}
+.reveal .smaller .column p {
+  margin-bottom: 0.3em;
+}
+
+.reveal .smaller section img,
+.reveal section.smaller img {
+  max-height: 420px;
+}
+
+/* ===== 演習用：expandable 解答 ===== */
+.reveal details.quiz-answer {
+  margin-top: 0.8em;
+  border: 1px solid #b5d4e8;
+  border-left: 6px solid #3498db;
+  border-radius: 4px;
+  background: #f4faff;
+  padding: 0.5em 0.8em;
+}
+.reveal details.quiz-answer > summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #1f618d;
+  list-style: none;
+  padding: 0.15em 0.25em;
+}
+.reveal details.quiz-answer > summary::-webkit-details-marker {
+  display: none;
+}
+.reveal details.quiz-answer > summary::before {
+  content: "\25B6  ";
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.reveal details.quiz-answer[open] > summary::before {
+  content: "\25BC  ";
+}
+.reveal details.quiz-answer > summary:hover {
+  color: #2874a6;
+}
+.reveal details.quiz-answer[open] {
+  background: #eaf4fc;
+}
+.reveal details.quiz-answer pre,
+.reveal details.quiz-answer p {
+  margin-top: 0.4em;
+  margin-bottom: 0.3em;
+}
+
+.reveal details.quiz-answer img,
+.reveal .smaller details.quiz-answer img {
+  max-height: none !important;
+  max-width: 90% !important;
+  height: auto !important;
+  cursor: zoom-in;
+}
+
+/* ===== 画像クリックズーム ===== */
+.reveal .slides section img {
+  cursor: zoom-in;
+}
+
+.img-zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  animation: fadeIn 0.15s ease-out;
+}
+.img-zoom-overlay img,
+.img-zoom-overlay svg {
+  max-width: 95vw !important;
+  max-height: 95vh !important;
+  object-fit: contain;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

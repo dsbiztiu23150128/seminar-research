@@ -1,0 +1,183 @@
+---
+title: "データ"
+---
+
+:::{.callout-tip title="書き方ガイド：データ"}
+**何を書くか：** 分析に使用するデータの全体像を示す章です。データの出典・構造・基本統計量・可視化を通じて、読者がデータを十分に理解できるようにします。
+
+**書き方のコツ：**
+
+- **データ概要** では、取得元・期間・サンプル数・変数の一覧を明示します
+- **基本統計量** は表形式で整理し、データの分布を把握できるようにします
+- **可視化** は目的を明確にして（例：「時系列の傾向を確認する」）、図にキャプションと番号を付けます
+- 前処理の手順はフロー図で示すと理解しやすくなります
+
+**Quartoの機能：**
+
+- R コードブロック `` ```{r} `` でデータ処理と可視化を実行できます
+- `#| label: fig-xxx` と `#| fig-cap:` で図番号とキャプションを自動付与します
+- `@fig-xxx` で本文中からクロスリファレンスできます
+- `::: {.panel-tabset}` でタブ切替パネルを作成できます
+- Mermaid 記法でフロー図を描けます
+:::
+
+
+## データの出典
+
+| 項目 | 内容 |
+|------|------|
+| 利用データ | 東京都シェアサイクル事業オープンデータ（※実際の出典に置き換えてください） |
+| 気象データ | 気象庁 過去の気象データ検索（※実際の出典に置き換えてください） |
+| 取得日 | 2025年○月○日 |
+| 前処理スクリプト | `src/generate_data.R` |
+
+: データの出典 {#tbl-data-source}
+
+
+## データの準備
+
+```{r}
+#| label: setup-data
+#| code-summary: "データ読み込み"
+
+bike_data <- read.csv("data/bike_data.csv")
+bike_data$date <- as.Date(bike_data$date)
+bike_data$wday <- factor(bike_data$wday,
+  levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+```
+
+
+## データ概要
+
+本研究では、東京都内のシェアサイクル利用数と気象データを組み合わせた合成データセットを使用する。
+
+| 項目 | 内容 |
+|------|------|
+| 対象期間 | 2024年1月1日 〜 2024年12月31日（365日間） |
+| 時間粒度 | 1時間単位 |
+| レコード数 | 8,760件（365日 × 24時間） |
+| 目的変数 | 1時間あたりの利用数（count） |
+| 説明変数 | 気温、湿度、風速、降雨有無、曜日、時間帯 |
+
+: データセットの概要 {#tbl-data-overview}
+
+### 変数一覧
+
+| 変数名 | 型 | 説明 | 単位 |
+|--------|-------|------|------|
+| `date` | Date | 日付 | - |
+| `hour` | integer | 時間帯（0–23） | 時 |
+| `temperature` | numeric | 気温 | °C |
+| `humidity` | numeric | 相対湿度 | % |
+| `wind_speed` | numeric | 風速 | m/s |
+| `is_rain` | integer | 降雨フラグ（0/1） | - |
+| `count` | integer | 利用数（目的変数） | 台 |
+
+: 変数一覧 {#tbl-variables}
+
+
+## 基本統計量
+
+```{r}
+#| label: tbl-summary-stats
+#| tbl-cap: "基本統計量"
+#| code-summary: "基本統計量の算出"
+
+vars <- c("temperature", "humidity", "wind_speed", "count")
+stats <- do.call(rbind, lapply(vars, function(v) {
+  x <- bike_data[[v]]
+  data.frame(
+    変数 = v,
+    平均 = round(mean(x), 1),
+    標準偏差 = round(sd(x), 1),
+    最小 = round(min(x), 1),
+    中央値 = round(median(x), 1),
+    最大 = round(max(x), 1)
+  )
+}))
+knitr::kable(stats, row.names = FALSE)
+```
+
+
+## 時系列の可視化
+
+@fig-timeseries は日別の平均利用数の推移を示す。夏季に利用数が増加し、冬季に減少する季節パターンが確認できる。
+
+```{r}
+#| label: fig-timeseries
+#| fig-cap: "日別平均利用数の推移"
+#| code-summary: "時系列グラフの作成"
+
+daily_avg <- aggregate(count ~ date, data = bike_data, FUN = mean)
+
+plot(daily_avg$date, daily_avg$count, type = "l", col = "#2F5496",
+     xlab = "日付", ylab = "平均利用数（台/時間）", lwd = 1.5)
+```
+
+
+## 気象データとの関係
+
+@fig-scatter-temp は気温と利用数の関係を示す散布図である。気温が高いほど利用数が増加する正の相関が認められる。
+
+```{r}
+#| label: fig-scatter-temp
+#| fig-cap: "気温と利用数の関係"
+#| code-summary: "散布図の作成"
+
+set.seed(42)
+idx <- sample(nrow(bike_data), 2000)
+sample_data <- bike_data[idx, ]
+
+plot(sample_data$temperature, sample_data$count,
+     pch = 16, col = adjustcolor("#2F5496", 0.3), cex = 0.6,
+     xlab = "気温（°C）", ylab = "利用数（台）")
+```
+
+
+## 曜日・時間帯パターン
+
+::: {.panel-tabset}
+
+### 時間帯別
+
+```{r}
+#| label: fig-hourly-pattern
+#| fig-cap: "時間帯別の平均利用数"
+#| code-summary: "時間帯別集計"
+
+hourly_avg <- aggregate(count ~ hour, data = bike_data, FUN = mean)
+
+barplot(hourly_avg$count, names.arg = hourly_avg$hour,
+        col = "#2F5496", xlab = "時間帯", ylab = "平均利用数（台）",
+        las = 1)
+```
+
+### 曜日別
+
+```{r}
+#| label: fig-wday-pattern
+#| fig-cap: "曜日別の平均利用数"
+#| code-summary: "曜日別集計"
+
+wday_avg <- aggregate(count ~ wday, data = bike_data, FUN = mean)
+
+barplot(wday_avg$count, names.arg = wday_avg$wday,
+        col = "#4472C4", xlab = "曜日", ylab = "平均利用数（台）",
+        las = 1)
+```
+
+:::
+
+
+## 前処理パイプライン
+
+```{mermaid}
+%%| label: fig-preprocess
+%%| fig-cap: "データ前処理パイプライン"
+flowchart LR
+    A[元データ取得] --> B[欠損値処理]
+    B --> C[特徴量生成]
+    C --> D[時間帯・曜日<br>ダミー変数化]
+    D --> E[訓練/テスト分割]
+    E --> F[モデル入力]
+```

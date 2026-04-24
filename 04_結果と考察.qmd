@@ -1,0 +1,220 @@
+---
+title: "結果と考察"
+---
+
+:::{.callout-tip title="書き方ガイド：結果と考察"}
+**何を書くか：** モデルの学習結果・精度評価・分析結果を客観的に示し、その意味を考察する章です。報告書の中核となる最も重要な章です。
+
+**書き方のコツ：**
+
+- **結果** と **考察** を分けて書きます。結果は客観的事実、考察は解釈と意味づけです
+- 精度は表で比較し、どの手法が優れているかを明確にします
+- グラフは複数の観点から作成します（時系列、誤差分布、変数重要度など）
+- 考察では「なぜそうなったか」の仮説を示し、先行研究との関連を述べます
+
+**Quartoの機能：**
+
+- R の基本グラフ関数（`plot`, `barplot`, `hist`）で可視化を作成できます
+- `::: {.panel-tabset}` でタブ切替パネルを使い、複数の図を整理できます
+- `knitr::kable()` で R の結果をきれいな表として出力できます
+:::
+
+
+## モデル学習
+
+第2章と同一のデータを読み込み、訓練データ（80%）とテストデータ（20%）に分割した。線形回帰（`lm`）と回帰木（`rpart`）の2モデルを学習させた。
+
+```{r}
+#| label: setup-model
+#| code-summary: "データ読み込み・モデル学習"
+#| warning: false
+#| message: false
+#| output: false
+
+# --- データ読み込み ---
+bike_data <- read.csv("data/bike_data.csv")
+bike_data$date <- as.Date(bike_data$date)
+bike_data$wday <- factor(bike_data$wday,
+  levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+
+# --- モデリング用データ ---
+model_data <- bike_data[, !names(bike_data) %in% c("date", "wday")]
+model_data$month      <- factor(model_data$month)
+model_data$is_rain    <- factor(model_data$is_rain)
+model_data$is_weekend <- factor(model_data$is_weekend)
+
+# --- 訓練/テスト分割 ---
+set.seed(123)
+n <- nrow(model_data)
+train_idx  <- sample(n, floor(0.8 * n))
+train_data <- model_data[train_idx, ]
+test_data  <- model_data[-train_idx, ]
+
+# --- 線形回帰 ---
+lm_fit  <- lm(count ~ ., data = train_data)
+lm_pred <- predict(lm_fit, newdata = test_data)
+
+# --- 回帰木 ---
+library(rpart)
+tree_fit  <- rpart(count ~ ., data = train_data,
+                   control = rpart.control(maxdepth = 8, minsplit = 20))
+tree_pred <- predict(tree_fit, newdata = test_data)
+
+actual <- test_data$count
+
+# --- 評価関数 ---
+calc_mae  <- function(a, p) round(mean(abs(a - p)), 2)
+calc_rmse <- function(a, p) round(sqrt(mean((a - p)^2)), 2)
+calc_rsq  <- function(a, p) round(1 - sum((a - p)^2) / sum((a - mean(a))^2), 2)
+```
+
+
+## 精度比較
+
+@tbl-accuracy に各モデルのテストデータに対する精度評価結果を示す。
+
+```{r}
+#| label: tbl-accuracy
+#| tbl-cap: "モデル精度の比較"
+#| code-summary: "精度指標の算出"
+
+accuracy_table <- data.frame(
+  モデル = c("線形回帰", "回帰木（rpart）"),
+  MAE  = c(calc_mae(actual, lm_pred),  calc_mae(actual, tree_pred)),
+  RMSE = c(calc_rmse(actual, lm_pred), calc_rmse(actual, tree_pred)),
+  R2   = c(calc_rsq(actual, lm_pred),  calc_rsq(actual, tree_pred))
+)
+names(accuracy_table)[4] <- "R\u00b2"
+
+knitr::kable(accuracy_table)
+```
+
+回帰木は全ての指標で線形回帰を上回っており、非線形な利用パターンの捕捉に有効であることが示された。
+
+
+## 予測結果の可視化
+
+@fig-pred-timeseries にテストデータの先頭200件における実測値と予測値の比較を示す。
+
+```{r}
+#| label: fig-pred-timeseries
+#| fig-cap: "実測値と予測値の比較（テストデータ先頭200件）"
+#| code-summary: "予測結果の時系列プロット"
+
+n_plot <- min(200, length(actual))
+idx <- seq_len(n_plot)
+
+plot(idx, actual[idx], type = "l", col = "black", lwd = 1.5,
+     xlab = "テストデータ インデックス", ylab = "利用数（台）",
+     ylim = range(c(actual[idx], lm_pred[idx], tree_pred[idx])))
+lines(idx, tree_pred[idx], col = "#2F5496", lwd = 1.5, lty = 3)
+lines(idx, lm_pred[idx],  col = "#C55A11", lwd = 1.5, lty = 2)
+legend("topright",
+       legend = c("実測値", "回帰木", "線形回帰"),
+       col = c("black", "#2F5496", "#C55A11"),
+       lty = c(1, 3, 2), lwd = 1.5, cex = 0.9)
+```
+
+
+## 誤差分析
+
+```{r}
+#| label: fig-error-hist
+#| fig-cap: "予測誤差の分布"
+#| code-summary: "誤差ヒストグラムの作成"
+
+lm_error   <- lm_pred - actual
+tree_error <- tree_pred - actual
+
+hist(lm_error, breaks = 50, col = adjustcolor("#C55A11", 0.5),
+     main = "", xlab = "予測誤差（台）", ylab = "頻度",
+     xlim = range(c(lm_error, tree_error)))
+hist(tree_error, breaks = 50, col = adjustcolor("#2F5496", 0.5), add = TRUE)
+legend("topright",
+       legend = c("線形回帰", "回帰木"),
+       fill = adjustcolor(c("#C55A11", "#2F5496"), 0.5), cex = 0.9)
+```
+
+@fig-error-hist より、回帰木の誤差分布は線形回帰と比べて中心（誤差ゼロ付近）に集中しており、予測のばらつきが小さいことが確認できる。
+
+
+## 変数重要度
+
+```{r}
+#| label: fig-importance
+#| fig-cap: "回帰木の変数重要度"
+#| code-summary: "変数重要度の抽出と可視化"
+
+imp <- tree_fit$variable.importance
+imp <- sort(imp)
+
+par(mar = c(5, 8, 2, 2))
+barplot(imp, horiz = TRUE, las = 1, col = "#2F5496",
+        xlab = "重要度", main = "")
+```
+
+@fig-importance より、`hour`（時間帯）と `temperature`（気温）が予測への寄与度が最も高い変数であることがわかる。
+
+
+## 曜日別精度
+
+::: {.panel-tabset}
+
+### MAE
+
+```{r}
+#| label: fig-wday-mae
+#| fig-cap: "曜日別 MAE（回帰木）"
+#| code-summary: "曜日別精度の算出"
+
+test_wday <- bike_data$wday[-train_idx]
+wday_err <- data.frame(
+  wday = test_wday,
+  abs_error = abs(tree_pred - actual)
+)
+wday_mae <- aggregate(abs_error ~ wday, data = wday_err, FUN = mean)
+
+barplot(wday_mae$abs_error, names.arg = wday_mae$wday,
+        col = "#2F5496", xlab = "曜日", ylab = "MAE（台）", las = 1)
+```
+
+### RMSE
+
+```{r}
+#| label: fig-wday-rmse
+#| fig-cap: "曜日別 RMSE（回帰木）"
+#| code-summary: "曜日別 RMSE の算出"
+
+wday_sq_err <- data.frame(
+  wday = test_wday,
+  sq_error = (tree_pred - actual)^2
+)
+wday_rmse <- aggregate(sq_error ~ wday, data = wday_sq_err, FUN = function(x) sqrt(mean(x)))
+names(wday_rmse)[2] <- "RMSE"
+
+barplot(wday_rmse$RMSE, names.arg = wday_rmse$wday,
+        col = "#4472C4", xlab = "曜日", ylab = "RMSE（台）", las = 1)
+```
+
+:::
+
+
+## 考察
+
+本章の分析結果から、以下の考察が得られる。
+
+### モデル性能について
+
+回帰木は線形回帰と比較して全ての評価指標で優れた性能を示した（@tbl-accuracy）。これは、シェアサイクルの利用パターンが時間帯や気象条件と**非線形な関係**を持つためと考えられる。例えば、通勤時間帯（7-9時、17-19時）に利用数が集中するパターンは、線形モデルでは捉えにくい。
+
+### 影響要因について
+
+変数重要度分析（@fig-importance）から、以下の知見が得られた。
+
+1. **時間帯（hour）** が最も重要な変数であり、シェアサイクルの利用は通勤・通学の移動パターンに強く依存している
+2. **気温（temperature）** が2番目に重要であり、気象条件がシェアサイクルの利用判断に大きく影響する。先行研究 [@Eren2020] の知見とも一致する
+3. **降雨（is_rain）** は利用数を大きく減少させる要因であり、需要予測において重要な変数である
+
+### 先行研究との比較
+
+@Fanaee2014 が示したバイクシェアリングデータにおけるイベント検出の知見と同様に、気象条件と時間帯が利用パターンの主要な決定要因であることが確認された。また、@Singhvi2015 が報告した NYC Citi Bike の予測事例と比較しても、非線形手法の有効性は同様の傾向を示している。

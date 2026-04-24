@@ -1,0 +1,62 @@
+project:
+  type: book
+  output-dir: docs
+  resources:
+    - ref/
+    - css/
+
+book:
+  title: "東京都内シェアサイクル利用数の予測モデル構築に関する研究"
+  author: "東京国際大学 商学部 <br>データサイエンスコース<br>東国 花子"
+  date: today
+  chapters:
+    - index.qmd
+    - 01_研究概要.qmd
+    - 02_データ.qmd
+    - 03_分析手法.qmd
+    - 04_結果と考察.qmd
+    - 05_まとめ.qmd
+
+bibliography: ref/references.bib
+
+format:
+  html:
+    embed-resources: false
+    lightbox: true
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    number-depth: 2
+    code-line-numbers: false
+    code-copy: true
+    code-fold: true
+    theme: [default, css/custom.scss]
+    reference-location: margin
+    citation-location: margin
+    fig-align: center
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    df-print: paged
+    lang: ja
+    mermaid:
+      theme: default
+language:
+  title-block-author-single: "作成者"
+  title-block-author-plural: "作成者"
+  title-block-published: "作成日"
+  section-title-appendices: "付録"
+crossref:
+  fig-title: "図"
+  tbl-title: "表"
+  eq-title: "式"
+  sec-prefix: "節"
+  fig-prefix: "図"
+  tbl-prefix: "表"
+  eq-prefix: "式"
+  ref-hyperlink: true
+execute:
+  echo: false
+  cache: false
+  freeze: false
+editor:
+  render-on-save: true

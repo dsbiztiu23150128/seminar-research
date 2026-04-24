@@ -1,0 +1,9 @@
+/.quarto/
+**/*.quarto_ipynb
+docs/
+a1_発表資料.html
+a1_発表資料_files/
+a1_発表資料_cache/
+.positai/
+.Rhistory
+tags

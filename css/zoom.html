@@ -1,0 +1,58 @@
+<script>
+window.addEventListener('load', function() {
+  function createOverlay(content) {
+    var overlay = document.createElement('div');
+    overlay.className = 'img-zoom-overlay';
+    overlay.appendChild(content);
+    overlay.addEventListener('click', function() { overlay.remove(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', esc); }
+    });
+    document.body.appendChild(overlay);
+  }
+  function attachZoom() {
+    // Images
+    document.querySelectorAll('.reveal .slides section img').forEach(function(img) {
+      if (img.dataset.zoomBound) return;
+      img.dataset.zoomBound = '1';
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var big = document.createElement('img');
+        big.src = img.currentSrc || img.src;
+        createOverlay(big);
+      });
+    });
+    // Mermaid SVGs
+    document.querySelectorAll('.reveal .slides section .mermaid svg, .reveal .slides section .cell-output-display svg').forEach(function(svg) {
+      if (svg.dataset.zoomBound) return;
+      svg.dataset.zoomBound = '1';
+      svg.style.cursor = 'zoom-in';
+      svg.addEventListener('click', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var clone = svg.cloneNode(true);
+        clone.style.maxWidth = '95vw';
+        clone.style.maxHeight = '95vh';
+        clone.style.background = 'white';
+        clone.style.borderRadius = '8px';
+        clone.style.padding = '20px';
+        createOverlay(clone);
+      });
+    });
+  }
+  attachZoom();
+  var mo = new MutationObserver(attachZoom);
+  mo.observe(document.body, { childList: true, subtree: true });
+
+  // Re-typeset MathJax when <details> elements are opened (MathJax 2.x API)
+  document.addEventListener('toggle', function(e) {
+    if (e.target.tagName === 'DETAILS' && e.target.open) {
+      if (typeof MathJax !== 'undefined' && MathJax.Hub) {
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, e.target]);
+      }
+    }
+  }, true);
+});
+</script>
