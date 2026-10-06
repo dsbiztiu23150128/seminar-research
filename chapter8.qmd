@@ -1,0 +1,16 @@
+# 結論
+
+
+
+本研究の対象作品では、制作費と投票数はジャンル・公開年等を考慮しても興行収入と正に関連した。時期・ジャンルによる違いも観察されたが、因果効果や公開前予測としては解釈できない。また、低予算映画の平均倍率は少数の大ヒット作に強く左右された。映画の実績を評価する際は、関心の量と評価の高さを区別し、平均に中央値と感度分析を添えることが重要である。
+
+## 参考文献
+
+- Liu, Y. (2006). Word of Mouth for Movies: Its Dynamics and Impact on Box Office Revenue. *Journal of Marketing*, 70(3), 74–89. https://doi.org/10.1509/jmkg.70.3.074
+- Chintagunta, P. K., Gopinath, S., & Venkataraman, S. (2010). The Effects of Online User Reviews on Movie Box Office Performance: Accounting for Sequential Rollout and Aggregation Across Local Markets. *Marketing Science*, 29(5), 944–957. https://doi.org/10.1287/mksc.1100.0572
+- Wasserman, M., et al. (2014 version). Correlations between user voting data, budget, and box office for films in the Internet Movie Database. *arXiv:1312.3986v3*. https://arxiv.org/abs/1312.3986
+- Dellarocas, C., Zhang, X., & Awad, N. F. (2007). Exploring the value of online product reviews in forecasting sales: The case of motion pictures. *Journal of Interactive Marketing*, 21(4), 23–45. https://doi.org/10.1002/dir.20087
+- Kim, T., Hong, J., & Kang, P. (2017). Box Office Forecasting considering Competitive Environment and Word-of-Mouth in Social Networks: A Case Study of Korean Film Market. *Computational Intelligence and Neuroscience*, 2017, 4315419. https://pmc.ncbi.nlm.nih.gov/articles/PMC5551474/
+
+データ：[Kaggle Movie Industry](https://www.kaggle.com/datasets/danielgrijalvas/movies)、[IMDb集計データの投稿](https://www.reddit.com/r/imdb/comments/1qby6m8/heres_a_dataset_of_the_ratings_of_all_7072_movies/)。原ファイルのSHA-256は `data/results/audit.json` に記録。
+
