@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; データ – 映画の興行収入と制作費・投票数・評価点の関連</title>
+<title>4&nbsp; データ – 映画の成功は何で測るべきか</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -5221,7 +5221,7 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">映画の興行収入と制作費・投票数・評価点の関連</a> 
+      <a href="./">映画の成功は何で測るべきか</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -5252,7 +5252,7 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究課題と方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">リサーチデザイン</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -5264,19 +5264,19 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">結果</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">分析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter6.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">考察</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">前期研究との統合</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter7.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">限界と今後の課題</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">考察</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -5297,7 +5297,13 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./guide.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">最初に読む：この研究で分かったこと</span></span></a>
+ <span class="menu-text">やさしい説明</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./presentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">映画の成功は何で測るべきか</span></a>
   </div>
 </li>
       </ul>
@@ -5307,8 +5313,17 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">目次</h2>
+   
+  <ul class="collapse">
+  <li><a href="#出所と対象選定" id="toc-出所と対象選定" class="nav-link active" data-scroll-target="#出所と対象選定"><span class="header-section-number">4.1</span> 出所と対象選定</a></li>
+  <li><a href="#指標の定義" id="toc-指標の定義" class="nav-link" data-scroll-target="#指標の定義"><span class="header-section-number">4.2</span> 指標の定義</a></li>
+  <li><a href="#対象選択による記述統計の違い" id="toc-対象選択による記述統計の違い" class="nav-link" data-scroll-target="#対象選択による記述統計の違い"><span class="header-section-number">4.3</span> 対象選択による記述統計の違い</a></li>
+  <li><a href="#極端な倍率の金額照合" id="toc-極端な倍率の金額照合" class="nav-link" data-scroll-target="#極端な倍率の金額照合"><span class="header-section-number">4.4</span> 極端な倍率の金額照合</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -5332,56 +5347,166 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
 </header>
 
 
-<p>Kaggleのmovies.csvは7,668件、IMDb投稿データは7,072件である。作品名と公開年の完全一致で結合すると4,498件となった。同一作品名・年の重複、制作費・興収・投票数・評価点の欠損、制作費または興収が正でない行を除くと3,877件となった。2020年の観測が6作品と少ないため、主分析は1980〜2019年の3,871件とし、2020年を含む結果も確認した。</p>
+<section id="出所と対象選定" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="出所と対象選定"><span class="header-section-number">4.1</span> 出所と対象選定</h2>
+<p>入力は保存済みKaggle Movie Industryのmovies.csv（7,668行）と、前期の対象を識別するためのIMDb投稿集計ファイルである。<a href="https://www.kaggle.com/datasets/danielgrijalvas/movies">Kaggle配布ページ</a>。再分析日は2026年10月7日。保存済みファイルの同一性はSHA-256をsummary.jsonに記録した。取得日・個々の金額の観測時点は未確定である。</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>変数</th>
-<th>使用列・意味</th>
-<th>注意点</th>
+<th>処理</th>
+<th style="text-align: right;">件数</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>興行収入</td>
-<td>Kaggleのgross、ドル</td>
-<td>金額の定義・集計範囲は原資料に依存</td>
+<td>元データ</td>
+<td style="text-align: right;">7,668</td>
 </tr>
 <tr class="even">
-<td>制作費</td>
-<td>Kaggleのbudget、ドル</td>
-<td>宣伝費等を含む総費用ではない</td>
+<td>タイトル・公開年の重複除外</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td>投票数</td>
-<td>Kaggleのvotes</td>
-<td>2026年IMDb側のTotal ratingsとは別</td>
+<td>1980〜2019年の範囲外</td>
+<td style="text-align: right;">25</td>
 </tr>
 <tr class="even">
-<td>評価点</td>
-<td>Kaggleのscore</td>
-<td>IMDb側のWeighted Meanとは別</td>
+<td>期間内で制作費・興収が欠損または非正・非有限</td>
+<td style="text-align: right;">2,215</td>
 </tr>
 <tr class="odd">
-<td>ジャンル</td>
-<td>Kaggleのgenre</td>
-<td>1作品1区分で、複数ジャンルは表さない</td>
+<td>主分析対象</td>
+<td style="text-align: right;">5,428</td>
 </tr>
 <tr class="even">
-<td>公開年</td>
-<td>結合したYear</td>
-<td>主分析1980〜2019年</td>
+<td>うち前期と共通</td>
+<td style="text-align: right;">3,871</td>
 </tr>
 <tr class="odd">
-<td>興収／制作費倍率</td>
-<td>gross ÷ budget</td>
-<td>利益率・投資回収率ではない</td>
+<td>今回追加</td>
+<td style="text-align: right;">1,557</td>
 </tr>
 </tbody>
 </table>
-<p>IMDbデータは2026年1月12日付の投稿者集計であり、IMDb公式の配布物ではない。一定以上の投票がある作品への選択、完全一致で結合できる作品への選択、欠損のない作品への選択がある。すべての映画を代表する無作為標本とはみなせない。Kaggle指標の取得時点と新しいIMDb側の取得時点は一致しておらず、同一時点の市場の状況として扱わない。</p>
+<p>評価点・投票数の欠損では今回の主分析から除外しない。金額の欠損作品を除くこと自体が偏りを生み得るため、5,428作品を映画市場全体の無作為標本とは扱わない。配布者のGitHub上のCSVと手元のCSVは、改行等を解析した後の7,668行・全項目が一致した。対応する<a href="https://github.com/danielgrijalva/movie-stats/blob/master/scrap.py">収集コード</a>は、IMDbの世界興収欄と制作費欄を取得する。長編映画・米国興収の条件を指定し、年ごとに最大200件を要求するコードで、ページ送りはない。無作為抽出でも全作品の網羅でもなく、取得時の検索順序も完全には復元できない。</p>
+<p><a href="https://www.kaggle.com/api/v1/datasets/view/danielgrijalvas/movies">Kaggleの公開メタデータ</a>では2021年7月23日の更新履歴が1980〜2020年への拡張を示す一方、説明本文には旧版の6,820作品・1986〜2016年という記述が残る。今回の件数は現物のCSVから算出した。更新日時は個別映画の金額観測日時を意味しない。</p>
+<p>制作費はドル記号を含まない場合に欠損とする処理で、為替換算処理は確認されない。ドル記号のある値を採る仕様であり、すべての作品の原通貨や費用範囲を個別に検証したわけではない。</p>
+</section>
+<section id="指標の定義" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="指標の定義"><span class="header-section-number">4.2</span> 指標の定義</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>変数</th>
+<th>定義・注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>興収</td>
+<td>gross。IMDbの世界興収欄から収集したドル表記金額、物価調整なし</td>
+</tr>
+<tr class="even">
+<td>制作費</td>
+<td>budget。宣伝費等の含有範囲は未確定</td>
+</tr>
+<tr class="odd">
+<td>倍率</td>
+<td>gross / budget。利益率ではない</td>
+</tr>
+<tr class="even">
+<td>ジャンル</td>
+<td>元データの単一genre列。複数ジャンルを網羅しない</td>
+</tr>
+<tr class="odd">
+<td>公開年</td>
+<td>year。国ごとの公開日差は扱わない</td>
+</tr>
+<tr class="even">
+<td>旧対象</td>
+<td>タイトル・年のIMDb結合と旧欠損条件を満たす作品</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="対象選択による記述統計の違い" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="対象選択による記述統計の違い"><span class="header-section-number">4.3</span> 対象選択による記述統計の違い</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>対象</th>
+<th>作品数</th>
+<th>興収中央値（百万ドル）</th>
+<th>倍率中央値</th>
+<th>興収が制作費未満の割合</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>今回全体</td>
+<td>5428</td>
+<td>36.61</td>
+<td>1.83</td>
+<td>32.3%</td>
+</tr>
+<tr class="even">
+<td>従来の結合済み対象</td>
+<td>3871</td>
+<td>62.76</td>
+<td>2.35</td>
+<td>20.8%</td>
+</tr>
+<tr class="odd">
+<td>今回追加された作品</td>
+<td>1557</td>
+<td>8.22</td>
+<td>0.66</td>
+<td>60.6%</td>
+</tr>
+</tbody>
+</table>
+<p>出所：保存済み元データから筆者集計。制作費未満の割合は利益や赤字の割合ではない。今回追加された作品は従来対象とは別の1,557作品であり、全体と従来対象は包含関係にある。</p>
+</section>
+<section id="極端な倍率の金額照合" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="極端な倍率の金額照合"><span class="header-section-number">4.4</span> 極端な倍率の金額照合</h2>
+<p>確認日：2026年10月7日。取得時点の違いを含むため、現在の値で元CSVを上書きしない。</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>作品</th>
+<th>元CSVの制作費／世界興収</th>
+<th>照合結果</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Paranormal Activity（CSV年2007）</td>
+<td>15,000／193,355,800ドル</td>
+<td>Paramountの2009年発表も15,000ドル。現在のThe Numbersは制作費450,000ドル・世界興収194,183,034ドル</td>
+</tr>
+<tr class="even">
+<td>The Blair Witch Project（1999）</td>
+<td>60,000／248,639,099ドル</td>
+<td>Box Office Mojoの制作費は60,000ドルで一致。現在の全公開分世界興収は248,642,260ドル</td>
+</tr>
+</tbody>
+</table>
+<p>出典：<a href="https://ir.paramount.com/static-files/f55db0fb-b0ca-455f-a36a-bc1f5dc03368">Paramount公式発表</a>、<a href="https://www.the-numbers.com/movie/Paranormal-Activity">The Numbers</a>、<a href="https://www.boxofficemojo.com/title/tt0185937/credits/">Box Office Mojo</a>。Paranormal ActivityはCSVでは2007年、比較サイトでは米国劇場公開2009年である。タイトルに加えて監督Oren Peliなどを確認して同一作品と照合した。制作費差の内訳は確認できず、15,000ドルを誤記とは断定しない。2作品の確認で全作品の金額が正しいことを保証するものではない。</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -5786,13 +5911,13 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chapter3.html" class="pagination-link" aria-label="研究課題と方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究課題と方法</span></span>
+      <a href="./chapter3.html" class="pagination-link" aria-label="リサーチデザイン">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">リサーチデザイン</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter5.html" class="pagination-link" aria-label="結果">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">結果</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapter5.html" class="pagination-link" aria-label="分析">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">分析</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

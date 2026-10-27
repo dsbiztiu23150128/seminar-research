@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; 先行研究 – 映画の興行収入と制作費・投票数・評価点の関連</title>
+<title>2&nbsp; 先行研究 – 映画の成功は何で測るべきか</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,7 +23,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script>const headroomChanged = new CustomEvent("quarto-hrChanged", {
@@ -5221,7 +5240,7 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">映画の興行収入と制作費・投票数・評価点の関連</a> 
+      <a href="./">映画の成功は何で測るべきか</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -5252,7 +5271,7 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究課題と方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">リサーチデザイン</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -5264,19 +5283,19 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">結果</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">分析</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter6.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">考察</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">前期研究との統合</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapter7.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">限界と今後の課題</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">考察</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -5297,7 +5316,13 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./guide.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">最初に読む：この研究で分かったこと</span></span></a>
+ <span class="menu-text">やさしい説明</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./presentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">映画の成功は何で測るべきか</span></a>
   </div>
 </li>
       </ul>
@@ -5307,8 +5332,17 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">目次</h2>
+   
+  <ul class="collapse">
+  <li><a href="#規模利益収益率を分ける" id="toc-規模利益収益率を分ける" class="nav-link active" data-scroll-target="#規模利益収益率を分ける"><span class="header-section-number">2.1</span> 規模・利益・収益率を分ける</a></li>
+  <li><a href="#分布の偏りと分析方法" id="toc-分布の偏りと分析方法" class="nav-link" data-scroll-target="#分布の偏りと分析方法"><span class="header-section-number">2.2</span> 分布の偏りと分析方法</a></li>
+  <li><a href="#データ選択と情報の時点" id="toc-データ選択と情報の時点" class="nav-link" data-scroll-target="#データ選択と情報の時点"><span class="header-section-number">2.3</span> データ選択と情報の時点</a></li>
+  <li><a href="#本研究との対応" id="toc-本研究との対応" class="nav-link" data-scroll-target="#本研究との対応"><span class="header-section-number">2.4</span> 本研究との対応</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -5332,12 +5366,97 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
 </header>
 
 
-<p>Liu（2006）はYahoo Moviesの口コミを用い、興収を説明する上で口コミの量が寄与すると報告した。一方、Chintaguntaほか（2010）は、地域別の分析と全国集計で口コミの量と評価の重要性が異なることを示した。この違いから、投票数と評価点を分けて検討するとともに、集計単位による限界を意識する必要がある。</p>
-<p>Wassermanほか（2014年公開版）は、IMDbの制作費・興収・投票数の分布と相関を検討し、投票数を作品の注目・知名度の指標として解釈する可能性を示した。ただし、投票する行動は広告への接触そのものではない。本研究でも投票数を関心の手がかりとして扱い、広告効果を直接測ったとは解釈しない。</p>
-<p>Dellarocasほか（2007）は公開後早期の売上予測にオンラインレビューを利用した。Kimほか（2017）は競争環境やSNS口コミなどを考慮した予測を検討した。これらを踏まえると、いつ得られる情報を使うか、上映規模や競争条件を含むかが重要である。本研究は累積データによる関連の検討であり、公開前のヒット予測の検証とは区別する。</p>
-<p>本節は出版社・著者公開ページで確認できた要旨を中心に整理した。細かな方法の比較は本文精読後に補足する。</p>
+<section id="規模利益収益率を分ける" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="規模利益収益率を分ける"><span class="header-section-number">2.1</span> 規模・利益・収益率を分ける</h2>
+<p>De Vany and Walls（2004）の3.1節・表1〜2は、1984〜1996年の北米公開2,015作品について、利益額と制作費に対する利益の比率を区別している。利益は推定映画レンタル収入から制作費を差し引き、物価を調整した値であり、宣伝費などは含まない。本研究の世界興収／制作費はこの利益率と同一ではない。金額規模と比率を別々に比較する考え方を参照する。<span class="citation" data-cites="devany2004">(<a href="#ref-devany2004" role="doc-biblioref">De Vany と Walls 2004年</a>)</span></p>
+</section>
+<section id="分布の偏りと分析方法" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="分布の偏りと分析方法"><span class="header-section-number">2.2</span> 分布の偏りと分析方法</h2>
+<p>Walls（2005）は北米公開1,989作品を用い、興収の対数について歪正規・歪t分布の回帰を比較する。制作費のほか上映スクリーン数、続編、スター、ジャンル、年などを考慮し、最小二乗・中央値回帰とも比較している。対数化だけで分布の問題が解消したとみなさない点が重要である。本研究は同じ分布モデルを推定せず、平均・中央値・集中度・極端値感度分析を併記する。HC3標準誤差も極端値や選択の偏りを全て解決するものではない。<span class="citation" data-cites="walls2005">(<a href="#ref-walls2005" role="doc-biblioref">Walls 2005年</a>)</span></p>
+</section>
+<section id="データ選択と情報の時点" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="データ選択と情報の時点"><span class="header-section-number">2.3</span> データ選択と情報の時点</h2>
+<p>WassermanほかはIMDbの欠損情報と国・言語による偏りを検討し、米国作品のネットワークに分析対象を限定した。本研究はその標本を追試せず、同じ映画CSVの中でIMDb結合の有無を比較する。世界興収を使う点も同論文の米国内興収とは異なる。<span class="citation" data-cites="wasserman2014">(<a href="#ref-wasserman2014" role="doc-biblioref">Wasserman ほか 2014年</a>)</span></p>
+<p>前期の問いに近いLiu（2006）、Chintaguntaほか（2010）は口コミやレビューと興収を扱う。後者は地域市場と集計の違いを考慮しており、観測単位を明確にする必要性につながる。今回、両論文の利用は公開要旨で確認した範囲に限定し、新テーマの中心的な分布分析の根拠には用いない。<span class="citation" data-cites="liu2006 chintagunta2010">(<a href="#ref-liu2006" role="doc-biblioref">Liu 2006年</a>; <a href="#ref-chintagunta2010" role="doc-biblioref">Chintagunta ほか 2010年</a>)</span></p>
+<p>Dellarocasほか（2007）とKimほか（2017）は、前期の予測試作を位置づける背景文献である。未知作品への予測評価と、本研究の標本内の説明・比較を区別するために参照する。<span class="citation" data-cites="dellarocas2007 kim2017">(<a href="#ref-dellarocas2007" role="doc-biblioref">Dellarocas ほか 2007年</a>; <a href="#ref-kim2017" role="doc-biblioref">Kim ほか 2017年</a>)</span></p>
+</section>
+<section id="本研究との対応" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="本研究との対応"><span class="header-section-number">2.4</span> 本研究との対応</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>文献</th>
+<th>今回確認した本文箇所</th>
+<th>取り入れる視点</th>
+<th>本研究との違い</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>De Vany and Walls（2004）</td>
+<td>pp.1039–1041、3.1節、表1–2</td>
+<td>金額と比率、極端値を分ける</td>
+<td>利益の推定・物価調整は行わない</td>
+</tr>
+<tr class="even">
+<td>Walls（2005）</td>
+<td>pp.1183–1187、式3、表1–2、結論</td>
+<td>分布と推定方法に注意する</td>
+<td>歪t回帰は実施しない</td>
+</tr>
+<tr class="odd">
+<td>Wassermanほか（2014版）</td>
+<td>Data、Missing information、Results</td>
+<td>欠損と標本選択を明示する</td>
+<td>ネットワーク標本・米国内興収ではない</td>
+</tr>
+<tr class="even">
+<td>Dellarocasほか（2007）</td>
+<td>前回確認したForecasting Accuracy</td>
+<td>未知作品の検証と説明を区別</td>
+<td>本研究は予測精度を測らない</td>
+</tr>
+<tr class="odd">
+<td>Kimほか（2017）</td>
+<td>前回確認した2.1・2.5節</td>
+<td>情報の時点・競争条件</td>
+<td>上映・競争情報は不足</td>
+</tr>
+</tbody>
+</table>
+<p>新テーマに直接関係する2論文の方法箇所を本文で確認し、対象・指標・方法の違いを整理した。論文の全証明や全表を再計算したという意味ではない。本研究の貢献は、同じ元データで指標・極端値・対象選択を一体的に比較する探索的再分析である。</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-chintagunta2010" class="csl-entry" role="listitem">
+Chintagunta, Pradeep K., Shyam Gopinath, と Sriram Venkataraman. 2010年. <span>「The Effects of Online User Reviews on Movie Box Office Performance: Accounting for Sequential Rollout and Aggregation Across Local Markets」</span>. <em>Marketing Science</em> 29 (5): 944–57. <a href="https://doi.org/10.1287/mksc.1100.0572">https://doi.org/10.1287/mksc.1100.0572</a>.
+</div>
+<div id="ref-devany2004" class="csl-entry" role="listitem">
+De Vany, Arthur S., と W. David Walls. 2004年. <span>「Motion picture profit, the stable Paretian hypothesis, and the curse of the superstar」</span>. <em>Journal of Economic Dynamics and Control</em> 28 (6): 1035–57. <a href="https://doi.org/10.1016/S0165-1889(03)00065-4">https://doi.org/10.1016/S0165-1889(03)00065-4</a>.
+</div>
+<div id="ref-dellarocas2007" class="csl-entry" role="listitem">
+Dellarocas, Chrysanthos, Xiaoquan Zhang, と Neveen F. Awad. 2007年. <span>「Exploring the value of online product reviews in forecasting sales: The case of motion pictures」</span>. <em>Journal of Interactive Marketing</em> 21 (4): 23–45. <a href="https://doi.org/10.1002/dir.20087">https://doi.org/10.1002/dir.20087</a>.
+</div>
+<div id="ref-kim2017" class="csl-entry" role="listitem">
+Kim, Taegu, Jungsik Hong, と Pilsung Kang. 2017年. <span>「Box Office Forecasting considering Competitive Environment and Word-of-Mouth in Social Networks: A Case Study of Korean Film Market」</span>. <em>Computational Intelligence and Neuroscience</em> 2017: 4315419. <a href="https://doi.org/10.1155/2017/4315419">https://doi.org/10.1155/2017/4315419</a>.
+</div>
+<div id="ref-liu2006" class="csl-entry" role="listitem">
+Liu, Yong. 2006年. <span>「Word of Mouth for Movies: Its Dynamics and Impact on Box Office Revenue」</span>. <em>Journal of Marketing</em> 70 (3): 74–89. <a href="https://doi.org/10.1509/jmkg.70.3.074">https://doi.org/10.1509/jmkg.70.3.074</a>.
+</div>
+<div id="ref-walls2005" class="csl-entry" role="listitem">
+Walls, W. D. 2005年. <span>「Modelling heavy tails and skewness in film returns」</span>. <em>Applied Financial Economics</em> 15 (17): 1181–88. <a href="https://doi.org/10.1080/0960310050391040">https://doi.org/10.1080/0960310050391040</a>.
+</div>
+<div id="ref-wasserman2014" class="csl-entry" role="listitem">
+Wasserman, Max, Satyam Mukherjee, Konner Scott, Xiao Han T. Zeng, Filippo Radicchi, と Luis A. N. Amaral. 2014年. <em>Correlations between user voting data, budget, and box office for films in the Internet Movie Database</em>. arXiv:1312.3986v3. <a href="https://arxiv.org/abs/1312.3986v3">https://arxiv.org/abs/1312.3986v3</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -5747,8 +5866,8 @@ url("data:font/woff;base64,d09GRgABAAAAAsBAAAsAAAAHavgAAQAAAAAAAAAAAAAAAAAAAAAAA
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter3.html" class="pagination-link" aria-label="研究課題と方法">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究課題と方法</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapter3.html" class="pagination-link" aria-label="リサーチデザイン">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">リサーチデザイン</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
